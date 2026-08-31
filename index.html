@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Button Calculator</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: Arial, sans-serif;
+        }
+
+        .container {
+            text-align: center;
+        }
+
+        button {
+            padding: 20px 40px;
+            font-size: 24px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        button:active {
+            transform: scale(0.98);
+        }
+
+        h1 {
+            color: white;
+            margin-bottom: 30px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Calculator App</h1>
+        <button onclick="openCalculator()">Open Calculator</button>
+    </div>
+
+    <script>
+        function openCalculator() {
+            // Create a new window with the calculator
+            const calculatorHTML = `
+                <!DOCTYPE html>
+                <html lang="en">
+                <head>
+                    <meta charset="UTF-8">
+                    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                    <title>Calculator</title>
+                    <style>
+                        body {
+                            display: flex;
+                            justify-content: center;
+                            align-items: center;
+                            min-height: 100vh;
+                            margin: 0;
+                            background: #333;
+                            font-family: Arial, sans-serif;
+                        }
+
+                        .calculator {
+                            background: #444;
+                            border-radius: 10px;
+                            padding: 20px;
+                            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+                            width: 320px;
+                        }
+
+                        .display {
+                            background: #222;
+                            color: #0f0;
+                            font-size: 32px;
+                            padding: 20px;
+                            border-radius: 5px;
+                            text-align: right;
+                            margin-bottom: 20px;
+                            word-wrap: break-word;
+                            word-break: break-all;
+                            min-height: 50px;
+                        }
+
+                        .buttons {
+                            display: grid;
+                            grid-template-columns: repeat(4, 1fr);
+                            gap: 10px;
+                        }
+
+                        button {
+                            padding: 20px;
+                            font-size: 20px;
+                            border: none;
+                            border-radius: 5px;
+                            cursor: pointer;
+                            background: #555;
+                            color: white;
+                            transition: background 0.2s;
+                        }
+
+                        button:hover {
+                            background: #666;
+                        }
+
+                        button:active {
+                            transform: scale(0.98);
+                        }
+
+                        .operator {
+                            background: #ff9500;
+                        }
+
+                        .operator:hover {
+                            background: #ffaa00;
+                        }
+
+                        .equals {
+                            background: #4CAF50;
+                            grid-column: span 2;
+                        }
+
+                        .equals:hover {
+                            background: #45a049;
+                        }
+
+                        .clear {
+                            background: #f44336;
+                            grid-column: span 2;
+                        }
+
+                        .clear:hover {
+                            background: #da190b;
+                        }
+                    </style>
+                </head>
+                <body>
+                    <div class="calculator">
+                        <div class="display" id="display">0</div>
+                        <div class="buttons">
+                            <button class="clear" onclick="clearDisplay()">AC</button>
+                            <button class="operator" onclick="appendOperator('/')">/</button>
+                            <button class="operator" onclick="appendOperator('*')">*</button>
+                            
+                            <button onclick="appendNumber('7')">7</button>
+                            <button onclick="appendNumber('8')">8</button>
+                            <button onclick="appendNumber('9')">9</button>
+                            <button class="operator" onclick="appendOperator('-')">-</button>
+                            
+                            <button onclick="appendNumber('4')">4</button>
+                            <button onclick="appendNumber('5')">5</button>
+                            <button onclick="appendNumber('6')">6</button>
+                            <button class="operator" onclick="appendOperator('+')">+</button>
+                            
+                            <button onclick="appendNumber('1')">1</button>
+                            <button onclick="appendNumber('2')">2</button>
+                            <button onclick="appendNumber('3')">3</button>
+                            <button class="operator" onclick="appendDecimal()">.</button>
+                            
+                            <button onclick="appendNumber('0')">0</button>
+                            <button class="equals" onclick="calculate()">=</button>
+                        </div>
+                    </div>
+
+                    <script>
+                        let display = document.getElementById('display');
+                        let currentValue = '0';
+                        let previousValue = '';
+                        let operation = null;
+                        let shouldResetDisplay = false;
+
+                        function updateDisplay() {
+                            display.textContent = currentValue;
+                        }
+
+                        function appendNumber(num) {
+                            if (shouldResetDisplay) {
+                                currentValue = num;
+                                shouldResetDisplay = false;
+                            } else {
+                                if (currentValue === '0') {
+                                    currentValue = num;
+                                } else {
+                                    currentValue += num;
+                                }
+                            }
+                            updateDisplay();
+                        }
+
+                        function appendOperator(op) {
+                            if (operation !== null) {
+                                calculate();
+                            }
+                            previousValue = currentValue;
+                            operation = op;
+                            shouldResetDisplay = true;
+                        }
+
+                        function appendDecimal() {
+                            if (shouldResetDisplay) {
+                                currentValue = '0.';
+                                shouldResetDisplay = false;
+                            } else if (!currentValue.includes('.')) {
+                                currentValue += '.';
+                            }
+                            updateDisplay();
+                        }
+
+                        function calculate() {
+                            if (operation === null || shouldResetDisplay) {
+                                return;
+                            }
+
+                            let result;
+                            const prev = parseFloat(previousValue);
+                            const current = parseFloat(currentValue);
+
+                            switch(operation) {
+                                case '+':
+                                    result = prev + current;
+                                    break;
+                                case '-':
+                                    result = prev - current;
+                                    break;
+                                case '*':
+                                    result = prev * current;
+                                    break;
+                                case '/':
+                                    result = prev / current;
+                                    break;
+                                default:
+                                    return;
+                            }
+
+                            currentValue = result.toString();
+                            operation = null;
+                            shouldResetDisplay = true;
+                            updateDisplay();
+                        }
+
+                        function clearDisplay() {
+                            currentValue = '0';
+                            previousValue = '';
+                            operation = null;
+                            shouldResetDisplay = false;
+                            updateDisplay();
+                        }
+                    </script>
+                </body>
+                </html>
+            `;
+
+            const newWindow = window.open();
+            newWindow.document.write(calculatorHTML);
+            newWindow.document.close();
+        }
+    </script>
+</body>
+</html>
